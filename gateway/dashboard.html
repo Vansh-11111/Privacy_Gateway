@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>India PII Gateway</title>
+<style>
+  :root {
+    --bg:#f5f6f8; --card:#ffffff; --ink:#151a22; --muted:#5d6675; --line:#e2e6ec;
+    --ok:#11704f; --okbg:#e3f5ec; --bad:#b4232a; --badbg:#fcebec; --warn:#8a5a00; --warnbg:#fff3d1;
+    --accent:#2451c8; --accentbg:#e8eefc; --chip:#eef0f4; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#0f1319; --card:#171c24; --ink:#e8ecf2; --muted:#9aa4b4; --line:#2a313c;
+      --ok:#5fd3a0; --okbg:#12302a; --bad:#ff8087; --badbg:#3a1a1e; --warn:#f2c14e; --warnbg:#3a2f12;
+      --accent:#8fb0ff; --accentbg:#1b2744; --chip:#222936;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  header { background:var(--card); border-bottom:1px solid var(--line); }
+  .wrap { max-width:1180px; margin:0 auto; padding:0 16px; }
+  .top { display:flex; align-items:center; gap:16px; padding:14px 0; flex-wrap:wrap; }
+  .top h1 { font-size:18px; margin:0; font-weight:650; }
+  .top .sub { color:var(--muted); font-size:13px; }
+  .grow { flex:1; }
+  .pill { display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:3px 10px; border-radius:99px; background:var(--chip); color:var(--muted); }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--muted); }
+  .pill.up .dot { background:var(--ok); } .pill.down .dot { background:var(--bad); }
+  nav { display:flex; gap:4px; flex-wrap:wrap; }
+  nav button { background:none; border:0; border-bottom:2px solid transparent; padding:10px 14px; font:inherit; color:var(--muted); cursor:pointer; }
+  nav button[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--accent); font-weight:600; }
+  main { padding:20px 0 60px; }
+  .tab { display:none; } .tab.on { display:block; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  h2 { font-size:16px; margin:0 0 10px; } h3 { font-size:14px; margin:0 0 6px; } h4 { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:14px 0 6px; font-weight:600; }
+  .muted { color:var(--muted); } .small { font-size:13px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 4px; }
+  .chip { border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:99px; padding:7px 13px; font:inherit; font-size:13px; cursor:pointer; }
+  .chip:hover { border-color:var(--accent); }
+  .chip[aria-pressed="true"] { background:var(--accentbg); border-color:var(--accent); color:var(--accent); font-weight:600; }
+  textarea { width:100%; min-height:64px; resize:vertical; font:inherit; padding:10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); }
+  .btn { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:9px 16px; font:inherit; font-weight:600; cursor:pointer; }
+  .btn.ghost { background:var(--chip); color:var(--ink); font-weight:500; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  @media (max-width: 820px) { .cols { grid-template-columns:1fr; } }
+  .side { border-top:4px solid var(--line); min-height:220px; }
+  .side.without { border-top-color:var(--bad); } .side.with { border-top-color:var(--ok); }
+  .badge { display:inline-block; font-size:12px; font-weight:700; letter-spacing:.04em; padding:3px 10px; border-radius:6px; }
+  .badge.leaked { background:var(--badbg); color:var(--bad); } .badge.safe { background:var(--okbg); color:var(--ok); }
+  .badge.blocked { background:var(--warnbg); color:var(--warn); } .badge.na, .badge.idle { background:var(--chip); color:var(--muted); }
+  pre.box { margin:0; padding:10px 12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; white-space:pre-wrap; word-break:break-word; font:13px/1.55 var(--mono); max-height:260px; overflow:auto; }
+  .tok { background:var(--accentbg); color:var(--accent); border-radius:4px; padding:0 3px; font-weight:600; }
+  .red { background:var(--warnbg); color:var(--warn); border-radius:4px; padding:0 3px; font-weight:600; }
+  .msg { padding:8px 10px; background:var(--bg); border:1px solid var(--line); border-radius:8px; margin:6px 0; font:13px var(--mono); white-space:pre-wrap; word-break:break-word; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .tag { font-size:12px; padding:2px 8px; border-radius:6px; background:var(--chip); }
+  .tag.act { background:var(--accentbg); color:var(--accent); } .tag.out { background:var(--warnbg); color:var(--warn); }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:16px; }
+  .stat { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .stat b { display:block; font-size:26px; line-height:1.15; } .stat span { font-size:12px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:600; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .bar { height:8px; background:var(--chip); border-radius:4px; position:relative; min-width:90px; }
+  .bar i { position:absolute; top:0; bottom:0; border-radius:4px; background:var(--accent); opacity:.9; }
+  .bar i.ci { background:var(--accent); opacity:.25; } .bar i.bad { background:var(--bad); }
+  .hbar { display:grid; grid-template-columns:110px 1fr 40px; gap:8px; align-items:center; margin:5px 0; font-size:13px; }
+  .hbar .bar i { left:0; }
+  .note { background:var(--warnbg); color:var(--warn); border-radius:8px; padding:10px 12px; font-size:13px; }
+  ul.plain { margin:6px 0 0; padding-left:18px; } ul.plain li { margin:3px 0; }
+  .err { color:var(--bad); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <h1>India PII Gateway</h1>
+      <span class="sub">Detects Indian identifiers before they reach an LLM, checks what comes back, and logs it without storing the data.</span>
+      <span class="grow"></span>
+      <span id="health" class="pill"><span class="dot"></span><span id="healthText">checking…</span></span>
+    </div>
+    <nav role="tablist" id="tabs">
+      <button role="tab" data-tab="demo" aria-selected="true">Live demo</button>
+      <button role="tab" data-tab="attacks" aria-selected="false">Attack matrix</button>
+      <button role="tab" data-tab="eval" aria-selected="false">Evaluation</button>
+      <button role="tab" data-tab="audit" aria-selected="false">Audit log</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- ============================ LIVE DEMO ============================ -->
+  <section id="tab-demo" class="tab on">
+    <div class="card">
+      <h2>Try an attack, or type your own message</h2>
+      <div class="muted small">Each run sends the same conversation to a simulated bank chatbot twice: straight to the bot, and through the gateway. The bot is a scripted stand-in for an LLM; all people and numbers are synthetic.</div>
+      <div class="chips" id="presets"></div>
+      <div id="presetInfo" class="small muted" style="margin:6px 0 0"></div>
+      <div id="presetMsgs"></div>
+      <h4>Or your own message</h4>
+      <textarea id="free" placeholder="e.g. mera aadhaar 2384 1295 6108 hai, mera loan kyun reject hua?"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="runFree">Send both ways</button>
+        <span class="small muted">Use made-up numbers only.</span>
+      </div>
+    </div>
+
+    <div class="cols">
+      <section class="card side without" aria-live="polite">
+        <div class="row"><h3 class="grow">Without gateway</h3><span id="vWithout" class="badge idle">waiting</span></div>
+        <h4>What the LLM received</h4><pre class="box" id="modelWithout">–</pre>
+        <h4>What the user got back</h4><pre class="box" id="replyWithout">–</pre>
+      </section>
+      <section class="card side with" aria-live="polite">
+        <div class="row"><h3 class="grow">With gateway</h3><span id="vWith" class="badge idle">waiting</span></div>
+        <h4>What the LLM received</h4><pre class="box" id="modelWith">–</pre>
+        <h4>What the user got back</h4><pre class="box" id="replyWith">–</pre>
+        <div class="tags" id="gwTags"></div>
+      </section>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="card" style="margin-top:16px">
+      <h2>Detected on the way in</h2>
+      <div id="typeBars" class="muted small">Nothing yet. Run a scenario above.</div>
+    </div>
+  </section>
+
+  <!-- ============================ ATTACK MATRIX ============================ -->
+  <section id="tab-attacks" class="tab">
+    <div class="card">
+      <h2>Six attacks, with and without the gateway</h2>
+      <div class="muted small" style="margin-bottom:10px">LEAKED means a real value reached the model's input or went out in the reply. Results come from the same code the tests check.</div>
+      <table><thead><tr><th>Attack</th><th>Without gateway</th><th>With gateway</th></tr></thead><tbody id="attackRows"><tr><td colspan="3" class="muted">Loading…</td></tr></tbody></table>
+    </div>
+  </section>
+
+  <!-- ============================ EVALUATION ============================ -->
+  <section id="tab-eval" class="tab"><div id="evalBody" class="muted">Loading…</div></section>
+
+  <!-- ============================ AUDIT ============================ -->
+  <section id="tab-audit" class="tab">
+    <div class="card">
+      <div class="row">
+        <h2 class="grow" style="margin:0">Audit log</h2>
+        <label class="small"><input type="checkbox" id="auto" checked> auto-refresh</label>
+        <button class="btn ghost" id="refreshAudit">Refresh</button>
+        <button class="btn ghost" id="resetAudit">Clear log</button>
+      </div>
+      <div class="muted small" style="margin:6px 0 10px">Records what happened, never the data: no message text, no values, no tokens, no raw session ids.</div>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Time (UTC)</th><th>Session</th><th>Outcome</th><th>Blocked</th><th>Found on input</th><th>Removed from reply</th><th class="num">ms</th></tr></thead>
+        <tbody id="auditRows"><tr><td colspan="7" class="muted">Loading…</td></tr></tbody>
+      </table></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const ADMIN_KEY = __ADMIN_KEY__;
+const $ = (id) => document.getElementById(id);
+const TOKEN_RX = /(<[A-Z][A-Z_]*_\d+>|\[REDACTED_[A-Z_]+\]|\[image removed by gateway\])/g;
+
+/* ---------- small helpers (all text goes through textContent, never parsed as HTML) ---------- */
+function h(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function setText(node, text) {
+  node.textContent = "";
+  String(text).split(TOKEN_RX).forEach((part, i) => {
+    if (!part) return;
+    if (i % 2 === 1) node.appendChild(h("span", part.startsWith("<") ? "tok" : "red", part));
+    else node.appendChild(document.createTextNode(part));
+  });
+}
+async function api(path, opts = {}) {
+  const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+  if (path.startsWith("/audit")) headers["X-Admin-Key"] = ADMIN_KEY;
+  const res = await fetch(path, Object.assign({}, opts, { headers }));
+  let body = null; try { body = await res.json(); } catch (e) {}
+  return { status: res.status, body, headers: res.headers };
+}
+const toMessages = (texts) => texts.map((t) => ({ role: "user", content: t }));
+const fmtJSON = (o) => Object.entries(o || {}).map(([t, v]) => t + (typeof v === "object" ? " ×" + Object.values(v).reduce((a, b) => a + b, 0) : " ×" + v));
+
+/* canonical form for leak checks: Indic digits -> ASCII, drop everything but 0-9A-Z */
+function canon(s) {
+  let out = "";
+  for (const ch of String(s)) {
+    const c = ch.codePointAt(0);
+    if (c >= 0x0966 && c <= 0x096F) out += String(c - 0x0966);
+    else if (c >= 0x0660 && c <= 0x0669) out += String(c - 0x0660);
+    else out += ch;
+  }
+  return out.toUpperCase().replace(/[^0-9A-Z]/g, "");
+}
+const leaks = (text, secrets) => { const c = canon(text); return secrets.some((s) => c.includes(canon(s))); };
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll("#tabs button").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", t.id === "tab-" + b.dataset.tab));
+  if (b.dataset.tab === "attacks") loadAttacks();
+  if (b.dataset.tab === "eval") loadEval();
+  if (b.dataset.tab === "audit") loadAudit();
+}));
+
+/* ---------- health ---------- */
+async function health() {
+  try {
+    const r = await api("/healthz");
+    $("health").className = "pill " + (r.status === 200 ? "up" : "down");
+    $("healthText").textContent = r.status === 200 ? "gateway up" : "gateway error";
+  } catch (e) { $("health").className = "pill down"; $("healthText").textContent = "gateway unreachable"; }
+}
+
+/* ---------- live demo ---------- */
+let PRESETS = [], busy = false;
+
+function setVerdict(id, kind, label) { const b = $(id); b.className = "badge " + kind; b.textContent = label; }
+function clearSide() {
+  ["modelWithout", "replyWithout", "modelWith", "replyWith"].forEach((i) => ($(i).textContent = "–"));
+  $("gwTags").textContent = "";
+  setVerdict("vWithout", "idle", "running…"); setVerdict("vWith", "idle", "running…");
+}
+
+async function runWithout(p) {
+  if (p && p.direct === false) {
+    setVerdict("vWithout", "na", "N/A");
+    setText($("modelWithout"), "Without a gateway there are no tokens, so this attack does not exist here.");
+    $("replyWithout").textContent = "–"; return;
+  }
+  const before = (await api("/demo/model-input")).body.calls;
+  const r = await api("/demo/direct", { method: "POST", body: JSON.stringify({ messages: toMessages(p.texts) }) });
+  const after = (await api("/demo/model-input")).body;
+  const seen = after.calls > before ? after.last.map((m) => m.content).join("\n\n") : "";
+  setText($("modelWithout"), seen || "(not called)");
+  setText($("replyWithout"), r.body.reply);
+  if (!p.watch) return setVerdict("vWithout", "idle", "no verdict");
+  const leaked = leaks(p.where === "model" ? seen : r.body.reply, p.watch);
+  setVerdict("vWithout", leaked ? "leaked" : "safe", leaked ? "LEAKED" : "SAFE");
+}
+
+async function runWith(p) {
+  for (const s of p.setup || []) {
+    await api("/v1/chat/completions", { method: "POST", headers: { "X-Session-Id": s.sid }, body: JSON.stringify({ messages: toMessages(s.texts) }) });
+  }
+  const before = (await api("/demo/model-input")).body.calls;
+  const r = await api("/v1/chat/completions", { method: "POST", headers: { "X-Session-Id": p.sid }, body: JSON.stringify({ messages: toMessages(p.texts) }) });
+  const after = (await api("/demo/model-input")).body;
+  const called = after.calls > before;
+  const seen = called ? after.last.map((m) => (typeof m.content === "string" ? m.content : JSON.stringify(m.content))).join("\n\n") : "";
+  setText($("modelWith"), called ? seen : "(the model was never called)");
+  const tags = $("gwTags"); tags.textContent = "";
+  if (r.status !== 200) {
+    const msg = r.body && r.body.error ? r.body.error.message : "error " + r.status;
+    setText($("replyWith"), msg);
+    setVerdict("vWith", "blocked", r.status === 400 ? "BLOCKED" : "ERROR " + r.status);
+    if (r.body && r.body.error) tags.appendChild(h("span", "tag out", "code: " + r.body.error.code));
+    return;
+  }
+  const reply = r.body.choices[0].message.content;
+  setText($("replyWith"), reply);
+  const x = r.body.x_pii_gateway || {};
+  fmtJSON(x.detected).forEach((t) => tags.appendChild(h("span", "tag act", "in: " + t)));
+  const o = x.output || {};
+  fmtJSON(o.redacted).forEach((t) => tags.appendChild(h("span", "tag out", "redacted from reply: " + t)));
+  if (o.images_removed) tags.appendChild(h("span", "tag out", "images removed ×" + o.images_removed));
+  if (o.foreign_tokens) tags.appendChild(h("span", "tag out", "foreign tokens ×" + o.foreign_tokens));
+  if (!p.watch) return setVerdict("vWith", "idle", "no verdict");
+  const leaked = leaks(p.where === "model" ? seen : reply, p.watch);
+  setVerdict("vWith", leaked ? "leaked" : "safe", leaked ? "LEAKED" : "SAFE");
+}
+
+async function runScenario(p) {
+  if (busy) return; busy = true; document.querySelectorAll(".chip,#runFree").forEach((b) => (b.disabled = true));
+  clearSide();
+  try { await runWithout(p); await runWith(p); }
+  catch (e) { setVerdict("vWith", "blocked", "ERROR"); setText($("replyWith"), String(e)); }
+  finally { busy = false; document.querySelectorAll(".chip,#runFree").forEach((b) => (b.disabled = false)); refreshMetrics(); }
+}
+
+function showPreset(p) {
+  document.querySelectorAll("#presets .chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.id === p.id)));
+  $("presetInfo").textContent = p.about;
+  const box = $("presetMsgs"); box.textContent = "";
+  p.texts.forEach((t, i) => box.appendChild(h("div", "msg", (p.texts.length > 1 ? "User message " + (i + 1) + ": " : "User: ") + t)));
+}
+
+async function loadPresets() {
+  PRESETS = (await api("/demo/presets")).body;
+  const box = $("presets");
+  PRESETS.forEach((p) => {
+    const b = h("button", "chip", p.label); b.dataset.id = p.id; b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => { showPreset(p); runScenario(p); });
+    box.appendChild(b);
+  });
+}
+$("runFree").addEventListener("click", () => {
+  const t = $("free").value.trim(); if (!t) return;
+  document.querySelectorAll("#presets .chip").forEach((c) => c.setAttribute("aria-pressed", "false"));
+  $("presetInfo").textContent = ""; $("presetMsgs").textContent = "";
+  runScenario({ id: "free", texts: [t], sid: "you", setup: [], watch: null, direct: true });
+});
+
+/* ---------- metrics ---------- */
+async function refreshMetrics() {
+  const r = await api("/audit/stats"); if (r.status !== 200) return;
+  const s = r.body, sum = (o) => Object.values(o || {}).reduce((a, b) => a + b, 0);
+  const cards = [
+    ["Requests", s.requests], ["Blocked", (s.by_outcome || {}).blocked || 0],
+    ["Values protected on input", sum(s.input_found_by_type)], ["Removed from replies", sum(s.output_redacted_by_type) + s.images_removed],
+    ["Foreign tokens seen", s.foreign_tokens],
+  ];
+  const box = $("stats"); box.textContent = "";
+  cards.forEach(([label, n]) => { const c = h("div", "stat"); c.appendChild(h("b", "", n)); c.appendChild(h("span", "", label)); box.appendChild(c); });
+  const types = Object.entries(s.input_found_by_type || {}).sort((a, b) => b[1] - a[1]);
+  const tb = $("typeBars"); tb.textContent = "";
+  if (!types.length) { tb.textContent = "Nothing yet. Run a scenario above."; return; }
+  const max = types[0][1];
+  types.forEach(([t, n]) => {
+    const row = h("div", "hbar"); row.appendChild(h("span", "", t));
+    const bar = h("div", "bar"); const i = h("i"); i.style.width = (100 * n / max) + "%"; bar.appendChild(i);
+    row.appendChild(bar); row.appendChild(h("span", "", n)); tb.appendChild(row);
+  });
+}
+
+/* ---------- attack matrix ---------- */
+function badge(v) { const k = v === null ? "na" : v ? "leaked" : "safe"; return h("span", "badge " + k, v === null ? "N/A" : v ? "LEAKED" : "SAFE"); }
+async function loadAttacks() {
+  const r = await api("/demo/attacks"), body = $("attackRows"); body.textContent = "";
+  r.body.forEach((a) => {
+    const tr = h("tr"); tr.appendChild(h("td", "", a.title));
+    const a1 = h("td"); a1.appendChild(badge(a.no_gateway)); const a2 = h("td"); a2.appendChild(badge(a.gateway));
+    tr.appendChild(a1); tr.appendChild(a2); body.appendChild(tr);
+  });
+}
+
+/* ---------- evaluation ---------- */
+const pct = (x) => (100 * x).toFixed(1) + "%";
+function ciBar(rate, lo, hi, bad) {
+  const bar = h("div", "bar"), ci = h("i", "ci"), v = h("i", bad ? "bad" : "");
+  ci.style.left = (100 * lo) + "%"; ci.style.width = Math.max(1, 100 * (hi - lo)) + "%";
+  v.style.left = "0"; v.style.width = (100 * rate) + "%"; v.style.opacity = ".85";
+  bar.appendChild(v); bar.appendChild(ci); return bar;
+}
+function table(headers, rows) {
+  const t = h("table"), thead = h("thead"), trh = h("tr");
+  headers.forEach(([label, num]) => trh.appendChild(h("th", num ? "num" : "", label))); thead.appendChild(trh); t.appendChild(thead);
+  const tb = h("tbody");
+  rows.forEach((cells) => { const tr = h("tr"); cells.forEach((c, i) => { const td = h("td", headers[i][1] ? "num" : ""); if (c instanceof Node) td.appendChild(c); else td.textContent = c; tr.appendChild(td); }); tb.appendChild(tr); });
+  t.appendChild(tb); return t;
+}
+async function loadEval() {
+  const root = $("evalBody"); root.textContent = "";
+  const r = await api("/demo/eval");
+  if (r.status !== 200) { const c = h("div", "card"); c.appendChild(h("h2", "", "No evaluation results yet")); c.appendChild(h("p", "muted", "Run this in the project folder, then reload:")); c.appendChild(h("pre", "box", "python -m gateway.evaluate")); root.appendChild(c); return; }
+  const e = r.body;
+  const intro = h("div", "card"); intro.appendChild(h("h2", "", "Measured on synthetic data"));
+  intro.appendChild(h("p", "muted small", "Generated " + e.generated_at + ", seed " + e.seed + ", " + e.n_per_row + " samples per row. Bars show the rate; the pale band is the 95% confidence interval."));
+  const caveat = h("div", "note"); caveat.appendChild(h("b", "", "Read this first. ")); caveat.appendChild(document.createTextNode(e.caveats[0]));
+  intro.appendChild(caveat); root.appendChild(intro);
+
+  const rc = h("div", "card"); rc.style.marginTop = "16px"; rc.appendChild(h("h2", "", "Recall: identifier found with the exact span"));
+  rc.appendChild(table([["Type"], ["Writing style"], ["Found", 1], ["Rate", 1], [""]], e.recall.map((x) => [x.type, x.style, x.found + "/" + x.n, pct(x.rate), ciBar(x.rate, x.ci_low, x.ci_high, false)])));
+  root.appendChild(rc);
+
+  const fp = h("div", "card"); fp.style.marginTop = "16px"; fp.appendChild(h("h2", "", "False positives: harmless text wrongly flagged"));
+  fp.appendChild(table([["Case"], ["Flagged", 1], ["Rate", 1], [""], ["Why"]], e.false_positives.map((x) => [x.case, x.flagged + "/" + x.n, pct(x.rate), ciBar(x.rate, x.ci_low, x.ci_high, x.rate > 0.05), x.note || ""])));
+  root.appendChild(fp);
+
+  const lk = h("div", "card"); lk.style.marginTop = "16px"; lk.appendChild(h("h2", "", "Leak-through: raw value still reaches the LLM (default policy)"));
+  lk.appendChild(table([["Type"], ["Leaked", 1], ["Blocked", 1], ["Tokenized or masked", 1], ["Allowed by policy", 1], ["Leak rate", 1]], e.leak_through.map((x) => [x.type, x.leaked, x.blocked, x.protected, x.allowed_by_policy, pct(x.leak_rate)])));
+  root.appendChild(lk);
+
+  const lat = e.latency, la = h("div", "card"); la.style.marginTop = "16px"; la.appendChild(h("h2", "", "Latency added by the gateway"));
+  la.appendChild(table([["Step"], ["p50 ms", 1], ["p95 ms", 1], ["max ms", 1]], [["Protect the request", lat.protect.p50_ms, lat.protect.p95_ms, lat.protect.max_ms], ["Scan the reply", lat.reply_scan.p50_ms, lat.reply_scan.p95_ms, lat.reply_scan.max_ms]]));
+  la.appendChild(h("p", "muted small", "Measured over " + lat.messages + " messages on the machine that ran the evaluation. Network time to the real model is not included."));
+  root.appendChild(la);
+
+  const cv = h("div", "card"); cv.style.marginTop = "16px"; cv.appendChild(h("h2", "", "Known limits"));
+  const ul = h("ul", "plain"); e.caveats.forEach((c) => ul.appendChild(h("li", "", c))); cv.appendChild(ul); root.appendChild(cv);
+}
+
+/* ---------- audit ---------- */
+async function loadAudit() {
+  const r = await api("/audit/events?limit=100"), body = $("auditRows"); body.textContent = "";
+  if (r.status !== 200) { const tr = h("tr"); const td = h("td", "err", "Could not read the audit log (HTTP " + r.status + ")."); td.colSpan = 7; tr.appendChild(td); body.appendChild(tr); return; }
+  if (!r.body.events.length) { const tr = h("tr"); const td = h("td", "muted", "No events yet."); td.colSpan = 7; tr.appendChild(td); body.appendChild(tr); return; }
+  r.body.events.forEach((ev) => {
+    const tr = h("tr"); tr.appendChild(h("td", "", ev.ts.replace("T", " ").replace("+00:00", "")));
+    tr.appendChild(h("td", "", ev.session.slice(0, 8)));
+    const o = h("td"); o.appendChild(h("span", "badge " + (ev.outcome === "ok" ? "safe" : ev.outcome === "blocked" ? "blocked" : "leaked"), ev.outcome)); tr.appendChild(o);
+    tr.appendChild(h("td", "", (ev.blocked_types || []).join(", ") || "–"));
+    tr.appendChild(h("td", "", fmtJSON(ev.input_detected).join(", ") || "–"));
+    const out = fmtJSON(ev.output_redacted); if (ev.images_removed) out.push("images ×" + ev.images_removed); if (ev.foreign_tokens) out.push("foreign tokens ×" + ev.foreign_tokens);
+    tr.appendChild(h("td", "", out.join(", ") || "–")); tr.appendChild(h("td", "num", ev.latency_ms));
+    body.appendChild(tr);
+  });
+}
+$("refreshAudit").addEventListener("click", loadAudit);
+$("resetAudit").addEventListener("click", async () => { await api("/demo/reset", { method: "POST", body: "{}" }); loadAudit(); refreshMetrics(); });
+setInterval(() => { if ($("tab-audit").classList.contains("on") && $("auto").checked) loadAudit(); }, 3000);
+
+/* ---------- start ---------- */
+health(); loadPresets(); refreshMetrics(); setInterval(health, 10000);
+</script>
+</body>
+</html>

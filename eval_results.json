@@ -1,0 +1,504 @@
+{
+  "generated_at": "2026-10-31T10:00:22+00:00",
+  "seed": 20261106,
+  "n_per_row": 500,
+  "recall": [
+    {
+      "type": "AADHAAR",
+      "style": "English keyword, grouped",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "AADHAAR",
+      "style": "Hinglish keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "AADHAAR",
+      "style": "Devanagari keyword and digits",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "AADHAAR",
+      "style": "no keyword, grouped",
+      "n": 500,
+      "found": 496,
+      "rate": 0.992,
+      "ci_low": 0.9796126401630988,
+      "ci_high": 0.9968847352024922
+    },
+    {
+      "type": "AADHAAR",
+      "style": "hyphen separators",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "AADHAAR",
+      "style": "dot separators",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "AADHAAR",
+      "style": "zero-width separators",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "PAN",
+      "style": "keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "PAN",
+      "style": "no keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "PAN",
+      "style": "lowercase",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "MOBILE",
+      "style": "+91 grouped",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "MOBILE",
+      "style": "bare 10 digits",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "MOBILE",
+      "style": "leading 0",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "UPI",
+      "style": "keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "UPI",
+      "style": "no keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "GSTIN",
+      "style": "keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "GSTIN",
+      "style": "no keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "IFSC",
+      "style": "keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "CARD",
+      "style": "grouped",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "CARD",
+      "style": "plain 16 digits",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "BANK_ACCOUNT",
+      "style": "English keyword",
+      "n": 500,
+      "found": 467,
+      "rate": 0.934,
+      "ci_low": 0.9087600691405885,
+      "ci_high": 0.9526217619745875
+    },
+    {
+      "type": "BANK_ACCOUNT",
+      "style": "Devanagari keyword",
+      "n": 500,
+      "found": 474,
+      "rate": 0.948,
+      "ci_low": 0.9248983617059371,
+      "ci_high": 0.9642699800903735
+    },
+    {
+      "type": "OTP",
+      "style": "Hinglish",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "OTP",
+      "style": "code before keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "OTP",
+      "style": "Devanagari keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "CVV",
+      "style": "keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    },
+    {
+      "type": "EMAIL",
+      "style": "keyword",
+      "n": 500,
+      "found": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999
+    }
+  ],
+  "false_positives": [
+    {
+      "case": "clean sentences (amounts, dates, pincodes, flight no.)",
+      "n": 500,
+      "flagged": 0,
+      "rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363,
+      "fired": {},
+      "note": ""
+    },
+    {
+      "case": "order/invoice number shaped like an Aadhaar",
+      "n": 500,
+      "flagged": 0,
+      "rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363,
+      "fired": {},
+      "note": ""
+    },
+    {
+      "case": "random 12-digit number, no context",
+      "n": 500,
+      "flagged": 61,
+      "rate": 0.122,
+      "ci_low": 0.0961588543796491,
+      "ci_high": 0.15360535722971383,
+      "fired": {
+        "AADHAAR": 61
+      },
+      "note": "about 1 in 10 random numbers passes the Aadhaar checksum"
+    },
+    {
+      "case": "random 10-digit number starting 6-9, no context",
+      "n": 500,
+      "flagged": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999,
+      "fired": {
+        "MOBILE": 500
+      },
+      "note": "unavoidable: identical in format to a real mobile number; it is only masked, not blocked"
+    },
+    {
+      "case": "random 16-digit number that fails Luhn",
+      "n": 500,
+      "flagged": 0,
+      "rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363,
+      "fired": {},
+      "note": ""
+    },
+    {
+      "case": "PAN-shaped code with an invalid holder letter",
+      "n": 500,
+      "flagged": 0,
+      "rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363,
+      "fired": {},
+      "note": ""
+    },
+    {
+      "case": "PAN-shaped code with a valid holder letter",
+      "n": 500,
+      "flagged": 500,
+      "rate": 1.0,
+      "ci_low": 0.9923753814690964,
+      "ci_high": 0.9999999999999999,
+      "fired": {
+        "PAN": 500
+      },
+      "note": "unavoidable: identical in format to a real PAN"
+    }
+  ],
+  "leak_through": [
+    {
+      "type": "AADHAAR",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 500,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "PAN",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 500,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "MOBILE",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 500,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "UPI",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 500,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "GSTIN",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 500,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "IFSC",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 0,
+      "allowed_by_policy": 500,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "CARD",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 500,
+      "protected": 0,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "BANK_ACCOUNT",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 21,
+      "protected": 479,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "OTP",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 500,
+      "protected": 0,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "CVV",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 500,
+      "protected": 0,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    },
+    {
+      "type": "EMAIL",
+      "n": 500,
+      "leaked": 0,
+      "blocked": 0,
+      "protected": 500,
+      "allowed_by_policy": 0,
+      "leak_rate": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.007624618530903363
+    }
+  ],
+  "latency": {
+    "messages": 500,
+    "protect": {
+      "p50_ms": 0.031,
+      "p95_ms": 0.083,
+      "max_ms": 0.296
+    },
+    "reply_scan": {
+      "p50_ms": 0.024,
+      "p95_ms": 0.052,
+      "max_ms": 0.165
+    }
+  },
+  "attacks": [
+    {
+      "title": "Customer pastes Aadhaar + PAN into chat",
+      "no_gateway": true,
+      "gateway": false
+    },
+    {
+      "title": "Customer shares an OTP",
+      "no_gateway": true,
+      "gateway": false
+    },
+    {
+      "title": "Aadhaar hidden with Devanagari digits + zero-width spaces",
+      "no_gateway": true,
+      "gateway": false
+    },
+    {
+      "title": "Attacker replays a victim's token from another session",
+      "no_gateway": null,
+      "gateway": false
+    },
+    {
+      "title": "Prompt injection makes the bot dump other customers' records",
+      "no_gateway": true,
+      "gateway": false
+    },
+    {
+      "title": "Injected email makes the reply carry the victim's Aadhaar in an image URL",
+      "no_gateway": true,
+      "gateway": false
+    }
+  ],
+  "caveats": [
+    "Test data is synthetic and generated by the same team that wrote the detectors; real-world accuracy is unmeasured.",
+    "A 12-digit number with no context passes the Aadhaar checksum about 10% of the time, so some false positives are unavoidable.",
+    "A bank account number that happens to pass the card checksum (about 1 in 10) is classed as CARD and blocked: safe, but counted as a miss in the BANK_ACCOUNT recall rows.",
+    "Names, addresses and free-text identifiers are not detected yet (no NER).",
+    "Numbers written as words, or spelled out digit by digit, are not detected.",
+    "UPI handle list is not exhaustive; GSTIN checksum was verified against one public example plus self-generated values."
+  ]
+}
