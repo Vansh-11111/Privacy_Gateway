@@ -1,0 +1,15 @@
+# Render Blueprint: the public demo website. No secrets needed.
+services:
+  - type: web
+    name: india-pii-gateway
+    runtime: python
+    plan: free
+    region: singapore          # closest Render region to India
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn gateway.server:build_app --factory --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PII_MODE
+        value: demo
+      - key: PII_TRUST_PROXY
+        value: "1"

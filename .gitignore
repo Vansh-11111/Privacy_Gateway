@@ -1,4 +1,12 @@
+# secrets: never commit these
 .env
+.env.*
+!.env.example
+
+# local databases and caches
+*.db
+*.db-journal
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/

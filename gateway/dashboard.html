@@ -95,6 +95,7 @@
 </header>
 
 <main class="wrap">
+  <div class="note" id="publicNote" hidden style="margin-bottom:12px;display:none">Public demo. The chatbot here is a scripted stand-in and every person and number is invented. Please do not type real personal data. The audit log is shared by all visitors and holds counts only, never values.</div>
   <!-- ============================ LIVE DEMO ============================ -->
   <section id="tab-demo" class="tab on">
     <div class="card">
@@ -164,6 +165,7 @@
 
 <script>
 const ADMIN_KEY = __ADMIN_KEY__;
+const PUBLIC_DEMO = __PUBLIC__;
 const $ = (id) => document.getElementById(id);
 const TOKEN_RX = /(<[A-Z][A-Z_]*_\d+>|\[REDACTED_[A-Z_]+\]|\[image removed by gateway\])/g;
 
@@ -403,6 +405,7 @@ async function loadAudit() {
   });
 }
 $("refreshAudit").addEventListener("click", loadAudit);
+if (PUBLIC_DEMO) { $("publicNote").hidden = false; $("publicNote").style.display = "block"; $("resetAudit").style.display = "none"; }
 $("resetAudit").addEventListener("click", async () => { await api("/demo/reset", { method: "POST", body: "{}" }); loadAudit(); refreshMetrics(); });
 setInterval(() => { if ($("tab-audit").classList.contains("on") && $("auto").checked) loadAudit(); }, 3000);
 

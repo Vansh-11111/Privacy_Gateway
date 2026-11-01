@@ -4,13 +4,15 @@ import json
 import os
 from pathlib import Path
 
+from fastapi import Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel
 
-from .app import create_app
+from .app import GatewayHTTPError, client_ip, create_app
 from .attacks import evaluate as run_attacks
 from .audit import AuditLog
 from .bankbot import OTHER_CUSTOMERS, VICTIM, BankLLM
+from .ratelimit import RateLimiter
 from .vault import TokenVault
 
 _DEVANAGARI = str.maketrans("0123456789", "०१२३४५६७८९")
@@ -54,12 +56,22 @@ def presets() -> list[dict]:
     ]
 
 
-def create_demo_app(eval_path: str | None = None, audit: AuditLog | None = None):
+MAX_DIRECT_MESSAGES = 100
+
+
+def create_demo_app(eval_path: str | None = None, audit: AuditLog | None = None, *,
+                    public: bool = False, admin_key: str | None = None,
+                    rate_limit_per_min: int | None = None, trust_proxy: bool = False):
+    """`public=True` is the mode for a website anyone can open: no log-clearing, a visible
+    synthetic-data notice, and rate limits. The scripted bot only ever holds invented
+    people, so exposing its 'no gateway' endpoint reveals nothing real."""
     bot = BankLLM()
     audit = audit or AuditLog(":memory:")
-    admin_key = os.environ.get("PII_ADMIN_KEY", "demo")
-    app = create_app(llm=bot, vault=TokenVault(), audit=audit, admin_key=admin_key)
+    admin_key = admin_key or os.environ.get("PII_ADMIN_KEY", "demo")
+    app = create_app(llm=bot, vault=TokenVault(), audit=audit, admin_key=admin_key,
+                     rate_limit_per_min=rate_limit_per_min, trust_proxy=trust_proxy, llm_kind="demo-bot")
     app.title = "India PII Gateway (demo)"
+    direct_limiter = RateLimiter(rate_limit_per_min) if rate_limit_per_min else None
     eval_file = Path(eval_path or os.environ.get("PII_EVAL_FILE", "eval_results.json"))
 
     @app.get("/", include_in_schema=False)
@@ -70,11 +82,16 @@ def create_demo_app(eval_path: str | None = None, audit: AuditLog | None = None)
     def dashboard():
         page = _PAGE.read_text(encoding="utf-8")
         key = json.dumps(admin_key).replace("</", "<\\/")
-        return HTMLResponse(page.replace("__ADMIN_KEY__", key))
+        page = page.replace("__ADMIN_KEY__", key).replace("__PUBLIC__", "true" if public else "false")
+        return HTMLResponse(page)
 
     @app.post("/demo/direct")
-    def direct(req: DirectRequest):
+    def direct(req: DirectRequest, request: Request):
         """The bot WITHOUT the gateway, for side-by-side comparison."""
+        if len(req.messages) > MAX_DIRECT_MESSAGES:
+            raise GatewayHTTPError(413, "too_large", "Too many messages.")
+        if direct_limiter and not direct_limiter.allow("direct:" + client_ip(request, trust_proxy)):
+            raise GatewayHTTPError(429, "rate_limited", "Too many requests. Slow down.", {"Retry-After": "10"})
         return {"reply": bot(req.messages)}
 
     @app.get("/demo/model-input")
@@ -98,6 +115,8 @@ def create_demo_app(eval_path: str | None = None, audit: AuditLog | None = None)
 
     @app.post("/demo/reset")
     def reset():
+        if public:
+            return JSONResponse(status_code=403, content={"error": "The public demo's log cannot be cleared."})
         audit.clear()
         return {"ok": True}
 
