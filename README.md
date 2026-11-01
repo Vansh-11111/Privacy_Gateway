@@ -2,7 +2,7 @@
 
 A privacy gateway that sits between your app and a large language model (LLM). It finds Indian personal data in prompts, masks, tokenises or blocks it before the model sees it, then restores the original values in the reply. Built by team **Cosmicpixel** (MAIT) for Build with Bharat 5.0.
 
-**Live demo:** https://YOUR-LINK.onrender.com  
+**Live demo:** https://india-pii-gateway.onrender.com  
 (Free hosting: the first load after 15 minutes idle takes about a minute.)
 
 > All data in the demo, tests and evaluation set is **invented**. Do not send real customer data through the public demo.
